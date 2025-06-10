@@ -110,8 +110,6 @@ st.markdown(
     }
     
     /* Card Styling (for the main glass-card wrapping sections) */
-    /* .upload-card styles are applied to the st.container itself in this version */
-    /* by targeting div[data-testid="stContainer"] within .upload-section */
     .glass-card {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px);
@@ -127,13 +125,13 @@ st.markdown(
         transform: translateY(-5px);
         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
     }
-    .button-container { /* This div is still injected via markdown for centering buttons if needed */
+    .button-container { 
         width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-top: auto; /* Push to bottom of flex container */
-        height: 60px; /* Consistent height for button area */
+        margin-top: auto;
+        height: 60px; /* Tinggi yang konsisten untuk area tombol */
     }
     /* Upload Section - Grid Layout */
     .upload-section {
@@ -144,7 +142,6 @@ st.markdown(
     }
     
     /* Styling for st.container used as upload cards */
-    /* This targets the stContainer div that is a direct child of the inner stVerticalBlock (column) */
     .upload-section > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] > div[data-testid="stContainer"] {
         background: linear-gradient(135deg, #f8f9ff 0%, #e6f2ff 100%);
         border-radius: 16px;
@@ -470,7 +467,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- Load Model ---
+# --- Load Model (VERSI LEBIH SEDERHANA DAN TERKINI) ---
 @st.cache_resource
 def load_ml_model():
     model_path = 'model_sampah_vgg16.keras' 
@@ -535,7 +532,7 @@ category_colors = {
 # --- Function Prediction ---
 def predict_image(image_file, model, class_labels):
     try:
-        img = Image.open(image_file).convert("RGB") 
+        img = Image.open(image_file).convert("RGB") # Menggunakan Image.open
         img = img.resize((224, 224))
         img_array = np.array(img)
         img_array = img_array / 255.0
@@ -631,7 +628,7 @@ with st.container(): # Main container for overall app layout
     </div>
     """, unsafe_allow_html=True)
 
-    # --- Upload Section: Structure for consistent card and button alignment ---
+    # --- Upload Section ---
     st.markdown("""
     <div class="glass-card">
         <div class="upload-section">
@@ -647,7 +644,7 @@ with st.container(): # Main container for overall app layout
                 <h3 class="upload-title">Upload dari Galeri</h3>
                 <p class="upload-subtitle">Pilih gambar sampah dari perangkat Anda</p>
             </div>
-            """, unsafe_allow_html=True) 
+            """, unsafe_allow_html=True)
             
             uploaded_file = st.file_uploader(
                 "Pilih gambar...",
@@ -657,7 +654,6 @@ with st.container(): # Main container for overall app layout
             )
 
     with col2:
-        # st.container untuk membungkus seluruh konten kartu kedua
         with st.container(): 
             st.markdown("""
             <div class="upload-card-content">
@@ -665,7 +661,7 @@ with st.container(): # Main container for overall app layout
                 <h3 class="upload-title">Ambil Foto</h3>
                 <p class="upload-subtitle">Gunakan kamera untuk mengambil foto langsung</p>
             </div>
-            """, unsafe_allow_html=True) # Tutup div konten kustom
+            """, unsafe_allow_html=True)
             
             camera_col_placeholder = st.empty()
 
@@ -677,14 +673,12 @@ with st.container(): # Main container for overall app layout
                         st.session_state.show_camera = False
                         st.rerun()
             else:
-                # Widget Streamlit diletakkan secara langsung setelah konten HTML kustom.
-                # CSS akan mengatur posisi dan gaya tombolnya.
                 if camera_col_placeholder.button("📷 Aktifkan Kamera", key="camera_btn", help="Klik untuk mengaktifkan kamera"):
                     st.session_state.show_camera = True
                     st.session_state.camera_file_buffer = None
                     st.rerun()
 
-    st.markdown("</div></div>", unsafe_allow_html=True) # Menutup .upload-section dan .glass-card
+    st.markdown("</div></div>", unsafe_allow_html=True)
 
     # --- Choose Source Image ---
     image_source = None
@@ -710,7 +704,6 @@ with st.container(): # Main container for overall app layout
 
             with results_col1:
                 with st.container(): 
-                    # Mengganti use_column_width menjadi use_container_width
                     st.image(image_source, use_container_width=True, caption='Gambar yang Diunggah/Diambil')
             
             with results_col2:
