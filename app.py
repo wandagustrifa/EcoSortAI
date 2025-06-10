@@ -107,7 +107,6 @@ st.markdown(
         font-size: 1.05rem;
         max-width: 800px;
         margin: 0 auto;
-        text-align: center;
     }
     
     /* Card Styling (for the main glass-card wrapping sections) */
@@ -133,8 +132,6 @@ st.markdown(
         text-align: center;
         border: 2px dashed #4f46e5;
         transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
         display: flex;
         flex-direction: column;
         justify-content: space-between; /* Mendorong konten ke atas dan tombol ke bawah */
@@ -198,24 +195,18 @@ st.markdown(
     }
 
     .upload-card-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
         margin-bottom: 1rem; /* Space between content and uploader */
-        width: 100%; /* Ensure content takes full width */
     }
     
     .upload-icon {
         font-size: 3rem;
         margin-bottom: 1rem;
-        display: block;
     }
     
     .upload-title {
         font-size: 1.3rem;
         font-weight: 600;
-        color: #4f46e5;;
+        color: #1e293b;
         margin-bottom: 0.5rem;
     }
     
