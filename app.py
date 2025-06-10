@@ -107,6 +107,7 @@ st.markdown(
         font-size: 1.05rem;
         max-width: 800px;
         margin: 0 auto;
+        text-align: center;
     }
     
     /* Card Styling (for the main glass-card wrapping sections) */
@@ -214,7 +215,7 @@ st.markdown(
     .upload-title {
         font-size: 1.3rem;
         font-weight: 600;
-        color: #1e293b;
+        color: #0f172a;
         margin-bottom: 0.5rem;
     }
     
