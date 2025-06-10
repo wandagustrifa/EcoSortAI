@@ -467,30 +467,34 @@ st.markdown(
 @st.cache_resource
 def load_ml_model():
     model_path = 'model_sampah_vgg16.keras' 
-    gdrive_file_id = "1lWx7TBcjxxFO3MOUWKEW7oUPVepWxgqN" 
+    gdrive_file_id = "1lWx7TBcjxxFO3MOUWKEW7oUPVepWxgqN" # Ganti dengan ID file Google Drive Anda yang benar
 
-    if not os.path.exists(model_path):
-        st.info(f"Mengunduh model dari Google Drive ke: {model_path}...")
-        try:
-            response = requests.get(model_url, stream=True, allow_redirects=True)
-            response.raise_for_status() 
-
-            with open(model_path, 'wb') as f:
-                for chunk in response.iter_content(chunk_size=8192): 
-                    f.write(chunk)
-            st.success("Model berhasil diunduh!")
-        except requests.exceptions.RequestException as e:
-            st.error(f"Gagal mengunduh model dari Google Drive URL '{model_url}'. Pastikan URL benar, file publik, dan tidak ada masalah autentikasi. Error: {e}")
-            st.stop()
-        except Exception as e:
-            st.error(f"Terjadi kesalahan saat menyimpan model setelah diunduh: {e}")
-            st.stop()
-    
     try:
+        # Cek apakah model sudah ada secara lokal dan ukurannya masuk akal (> 100MB)
+        # Jika ukurannya terlalu kecil (misalnya, 2.4KB), anggap rusak dan hapus
+        if os.path.exists(model_path) and os.path.getsize(model_path) < 100000000:
+            st.warning(f"File '{model_path}' ditemukan tetapi ukurannya terlalu kecil ({os.path.getsize(model_path)} bytes). Mengunduh ulang...")
+            os.remove(model_path) # Hapus file yang rusak
+
+        # Jika file belum ada atau baru saja dihapus karena rusak, unduh
+        if not os.path.exists(model_path):
+            st.info(f"Mengunduh model dari Google Drive (ID: {gdrive_file_id}) ke '{model_path}'...")
+            gdown.download(id=gdrive_file_id, output=model_path, quiet=False, fuzzy=True)
+            
+            # Verifikasi ukuran setelah unduhan
+            if not os.path.exists(model_path) or os.path.getsize(model_path) < 100000000:
+                raise Exception("File model tidak terunduh dengan benar atau ukurannya masih terlalu kecil.")
+            st.success("Model berhasil diunduh!")
+        else:
+            st.info(f"File model '{model_path}' sudah ditemukan secara lokal. Ukuran: {os.path.getsize(model_path)} bytes. Melewatkan pengunduhan.")
+
+        # Muat model
         model = load_model(model_path)
         return model
+
     except Exception as e:
-        st.error(f"Gagal memuat model. Pastikan '{model_path}' ada dan tidak rusak. Error: {e}")
+        st.error(f"**GAGAL MEMUAT ATAU MENGUNDUH MODEL!** Detail: {e}")
+        st.error("Pastikan ID file Google Drive benar, file publik, dan ada cukup memori/disk di lingkungan deployment.")
         st.stop()
 
 # Inisialisasi session state
