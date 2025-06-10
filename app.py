@@ -2,8 +2,6 @@ import streamlit as st
 import time
 import os
 import gdown 
-# requests tidak digunakan langsung di sini, jadi bisa dihapus impornya
-# import requests 
 
 try:
     import tensorflow as tf
@@ -497,13 +495,6 @@ def load_ml_model():
         if not os.path.exists(model_path):
             st.info(f"Mengunduh model dari Google Drive (ID: {gdrive_file_id}) ke '{model_path}'...")
             gdown.download(id=gdrive_file_id, output=model_path, quiet=False, fuzzy=True)
-            
-            # Verifikasi ukuran setelah unduhan
-            if not os.path.exists(model_path) or os.path.getsize(model_path) < 100000000:
-                raise Exception("File model tidak terunduh dengan benar atau ukurannya masih terlalu kecil.")
-            st.success("Model berhasil diunduh!")
-        else:
-            st.info(f"File model '{model_path}' sudah ditemukan secara lokal. Ukuran: {os.path.getsize(model_path)} bytes. Melewatkan pengunduhan.")
 
         # Muat model
         model = load_model(model_path)
@@ -623,8 +614,8 @@ with st.container(): # Main container for overall app layout
     <div class="hero-section">
         <h1 class="hero-title">🌍 EcoSort AI</h1>
         <p class="hero-subtitle">
-            Klasifikasi Sampah Cerdas dengan Kecerdasan Buatan
-            <br>Mari bersama menciptakan lingkungan yang lebih bersih dan berkelanjutan
+            <center>Klasifikasi Sampah Cerdas dengan Kecerdasan Buatan
+            <br>Mari bersama menciptakan lingkungan yang lebih bersih dan berkelanjutan<center>
         </p>
     </div>
     """, unsafe_allow_html=True)
