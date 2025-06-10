@@ -646,7 +646,7 @@ with st.container(): # Main container for overall app layout
             <div class="upload-card">
                 <div class="upload-card-content">
                     <span class="upload-icon">📁</span>
-                    <h3 class="upload-title">Upload dari Galeri</h3>
+                    <h3 class="upload-title" style="color: #0f172a;">Upload dari Galeri</h3>
                     <p class="upload-subtitle">Pilih gambar sampah dari perangkat Anda</p>
                 </div>
                 <div class="button-container">
@@ -671,7 +671,7 @@ with st.container(): # Main container for overall app layout
             <div class="upload-card">
                 <div class="upload-card-content">
                     <span class="upload-icon">📸</span>
-                    <h3 class="upload-title">Ambil Foto</h3>
+                    <h3 class="upload-title" style="color: #0f172a;">Ambil Foto</h3>
                     <p class="upload-subtitle">Gunakan kamera untuk mengambil foto langsung</p>
                 </div>
                 <div class="button-container">
