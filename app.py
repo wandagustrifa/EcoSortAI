@@ -158,7 +158,6 @@ st.markdown(
     }
     
     /* Styling for st.container used as upload cards */
-    /* This targets the stContainer div that is a direct child of the inner stVerticalBlock (column) */
     .upload-section > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] > div[data-testid="stContainer"] {
         background: linear-gradient(135deg, #f8f9ff 0%, #e6f2ff 100%);
         border-radius: 16px;
@@ -168,11 +167,11 @@ st.markdown(
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
-        display: flex; /* Make it a flex container */
-        flex-direction: column; /* Stack children vertically */
-        justify-content: space-between; /* Push content and uploader to ends */
-        align-items: center; /* Center horizontally */
-        height: 100%; /* Ensure both cards are same height in grid */
+        display: flex; 
+        flex-direction: column; 
+        justify-content: space-between; 
+        align-items: center; 
+        height: 100%; 
     }
 
     .upload-section > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] > div[data-testid="stContainer"]::before {
@@ -326,7 +325,6 @@ st.markdown(
     }
     
     /* Styling for st.container used as image preview in results */
-    /* This targets the stContainer div that is a direct child of the inner stVerticalBlock (column) */
     .results-container > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] > div[data-testid="stContainer"] {
         border-radius: 16px;
         overflow: hidden;
@@ -478,20 +476,17 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- Load Model (VERSI LEBIH SEDERHANA DAN TERKINI) ---
+# --- Load Model ---
 @st.cache_resource
 def load_ml_model():
     model_path = 'model_sampah_vgg16.keras' 
-    gdrive_file_id = "1lWx7TBcjxxFO3MOUWKEW7oUPVepWxgqN" # Ganti dengan ID file Google Drive Anda yang benar
+    gdrive_file_id = "1lWx7TBcjxxFO3MOUWKEW7oUPVepWxgqN" 
 
     try:
-        # Cek apakah model sudah ada secara lokal dan ukurannya masuk akal (> 100MB)
-        # Jika ukurannya terlalu kecil (misalnya, 2.4KB), anggap rusak dan hapus
         if os.path.exists(model_path) and os.path.getsize(model_path) < 100000000:
             st.warning(f"File '{model_path}' ditemukan tetapi ukurannya terlalu kecil ({os.path.getsize(model_path)} bytes). Mengunduh ulang...")
-            os.remove(model_path) # Hapus file yang rusak
+            os.remove(model_path)
 
-        # Jika file belum ada atau baru saja dihapus karena rusak, unduh
         if not os.path.exists(model_path):
             st.info(f"Mengunduh model dari Google Drive (ID: {gdrive_file_id}) ke '{model_path}'...")
             gdown.download(id=gdrive_file_id, output=model_path, quiet=False, fuzzy=True)
@@ -632,7 +627,7 @@ with st.container(): # Main container for overall app layout
     </div>
     """, unsafe_allow_html=True)
 
-    # --- Upload Section <!-- PERUBAHAN DI SINI: Re-struktur untuk penempatan widget Streamlit yang lebih baik -->
+    # --- Upload Section ---
     st.markdown("""
     <div class="glass-card">
         <div class="upload-section">
@@ -641,7 +636,7 @@ with st.container(): # Main container for overall app layout
     col1, col2 = st.columns(2)
 
     with col1:
-        with st.container(): # Ini adalah container untuk seluruh kartu upload file
+        with st.container(): # Container for all upload card
             st.markdown("""
             <div class="upload-card">
                 <div class="upload-card-content">
@@ -652,7 +647,6 @@ with st.container(): # Main container for overall app layout
                 <div class="button-container">
             """, unsafe_allow_html=True)
             
-            # Widget Streamlit diletakkan di sini, setelah pembukaan div custom
             uploaded_file = st.file_uploader(
                 "Pilih gambar...",
                 type=["jpg", "jpeg", "png"],
@@ -666,7 +660,7 @@ with st.container(): # Main container for overall app layout
             """, unsafe_allow_html=True)
 
     with col2:
-        with st.container(): # Ini adalah container untuk seluruh kartu ambil foto
+        with st.container(): # Container for take a photo
             st.markdown("""
             <div class="upload-card">
                 <div class="upload-card-content">
@@ -680,14 +674,13 @@ with st.container(): # Main container for overall app layout
             camera_col_placeholder = st.empty()
 
             if st.session_state.show_camera:
-                with camera_col_placeholder.container(): # Ini adalah container internal untuk camera_input
+                with camera_col_placeholder.container(): # Container internal for camera_input
                     captured_camera_file = st.camera_input("Ambil foto sampah", key="camera_input", label_visibility="hidden")
                     if captured_camera_file is not None:
                         st.session_state.camera_file_buffer = captured_camera_file
                         st.session_state.show_camera = False
                         st.rerun()
             else:
-                # Widget Streamlit diletakkan di sini, setelah pembukaan div custom
                 if camera_col_placeholder.button("📷 Aktifkan Kamera", key="camera_btn", help="Klik untuk mengaktifkan kamera"):
                     st.session_state.show_camera = True
                     st.session_state.camera_file_buffer = None
@@ -698,7 +691,7 @@ with st.container(): # Main container for overall app layout
             </div> <!-- Tutup .upload-card -->
             """, unsafe_allow_html=True)
 
-    st.markdown("</div></div>", unsafe_allow_html=True) # Menutup .upload-section dan .glass-card
+    st.markdown("</div></div>", unsafe_allow_html=True) # Close .upload-section and .glass-card
 
     # --- Choose Source Image ---
     image_source = None
@@ -724,7 +717,6 @@ with st.container(): # Main container for overall app layout
 
             with results_col1:
                 with st.container(): 
-                    # <!-- PERUBAHAN DI SINI: Mengganti use_column_width menjadi use_container_width -->
                     st.image(image_source, use_container_width=True, caption='Gambar yang Diunggah/Diambil')
             
             with results_col2:
