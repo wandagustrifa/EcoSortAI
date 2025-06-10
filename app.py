@@ -2,6 +2,8 @@ import streamlit as st
 import time
 import os
 import gdown 
+# requests tidak digunakan langsung di sini, jadi bisa dihapus impornya
+# import requests 
 
 try:
     import tensorflow as tf
@@ -125,9 +127,23 @@ st.markdown(
         transform: translateY(-5px);
         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
     }
-    /* .upload-card styles are applied to the st.container itself in this version */
-    /* by targeting div[data-testid="stContainer"] within .upload-section */
-    .button-container { /* This div is still injected via markdown for centering */
+    .upload-card {
+        background: linear-gradient(135deg, #f8f9ff 0%, #e6f2ff 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        border: 2px dashed #4f46e5;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Mendorong konten ke atas dan tombol ke bawah */
+        align-items: center;
+        height: 100%;
+        width: 100%;
+    }
+    .button-container {
         width: 100%;
         display: flex;
         justify-content: center;
@@ -154,11 +170,11 @@ st.markdown(
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
-        display: flex; 
-        flex-direction: column; 
-        justify-content: space-between; 
-        align-items: center; 
-        height: 100%; 
+        display: flex; /* Make it a flex container */
+        flex-direction: column; /* Stack children vertically */
+        justify-content: space-between; /* Push content and uploader to ends */
+        align-items: center; /* Center horizontally */
+        height: 100%; /* Ensure both cards are same height in grid */
     }
 
     .upload-section > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] > div[data-testid="stContainer"]::before {
@@ -182,22 +198,22 @@ st.markdown(
         box-shadow: 0 10px 25px rgba(79, 70, 229, 0.15);
     }
 
-    .upload-card-content { 
+    .upload-card-content {
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        margin-bottom: 1rem;
-        width: 100%;
+        margin-bottom: 1rem; /* Space between content and uploader */
+        width: 100%; /* Ensure content takes full width */
     }
     
-    .upload-icon { 
+    .upload-icon {
         font-size: 3rem;
         margin-bottom: 1rem;
         display: block;
     }
     
-    .upload-title { 
+    .upload-title {
         font-size: 1.3rem;
         font-weight: 600;
         color: #1e293b;
@@ -216,17 +232,11 @@ st.markdown(
     }
     
     /* Custom File Uploader */
-    /* Target the st.FileUploader's main div which contains the label and hidden input */
     .stFileUploader {
-        width: 100%; /* Occupy full width of its parent column container */
+        width: 100%;
         margin-top: auto; /* Push to bottom of flex container */
-        display: flex; /* Make it a flex container to center its contents */
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
-        height: 60px; /* Give it a consistent height to align with camera button */
     }
-    
-    /* Hide the default Streamlit file uploader button and text (the internal ones) */
+    /* Hide the default Streamlit file uploader button and text */
     .stFileUploader > div:first-child > div:first-child > button, 
     .stFileUploader > div:first-child > div:first-child > div {
         visibility: hidden !important;
@@ -235,7 +245,6 @@ st.markdown(
         padding: 0 !important;
         overflow: hidden !important;
     }
-    
     /* Style the custom button label for st.file_uploader */
     .stFileUploader label {
         /* WARNA LEBIH TERANG UNTUK BUTTON FILE UPLOADER */
@@ -248,26 +257,24 @@ st.markdown(
         font-size: 1rem !important;
         cursor: pointer !important;
         transition: all 0.3s ease !important;
-        display: inline-flex !important; /* Agar ikon dan teks sejajar */
+        display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
         gap: 8px !important;
-        width: 180px !important; /* Lebar tetap yang sama */
-        height: 45px !important; /* Tinggi tetap yang sama */
+        width: 180px !important;
+        height: 45px !important;
+        margin: 0 !important;
         box-sizing: border-box !important;
     }
 
     /* Custom Camera Input */
     .stCameraInput {
-        width: 100%; /* Occupy full width of its parent column container */
+        width: 100%;
         margin-top: auto; /* Push to bottom of flex container */
-        display: flex; /* Make it a flex container to center its contents */
-        flex-direction: column; /* Stack video/image and button vertically */
-        align-items: center; /* Center horizontally */
-        justify-content: center; /* Center vertically */
-        min-height: 60px; /* Minimal tinggi agar sejajar jika belum ada video/gambar */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
-    
     /* Style for the "Activate Camera" button generated by st.button (for initial activation) */
     .stButton > button { 
         /* WARNA LEBIH TERANG UNTUK BUTTON KAMERA */
@@ -280,12 +287,13 @@ st.markdown(
         font-size: 1rem !important;
         cursor: pointer !important;
         transition: all 0.3s ease !important;
-        display: inline-flex !important; /* Agar ikon dan teks sejajar */
+        display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
         gap: 8px !important;
-        width: 180px !important; /* Lebar tetap yang sama */
-        height: 45px !important; /* Tinggi tetap yang sama */
+        width: 180px !important;
+        height: 45px !important;
+        margin: 0 !important;
         box-sizing: border-box !important;
     }
     .stButton > button:hover {
@@ -320,6 +328,7 @@ st.markdown(
     }
     
     /* Styling for st.container used as image preview in results */
+    /* This targets the stContainer div that is a direct child of the inner stVerticalBlock (column) */
     .results-container > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] > div[data-testid="stContainer"] {
         border-radius: 16px;
         overflow: hidden;
@@ -411,7 +420,7 @@ st.markdown(
         font-size: 1rem;
     }
     /* Loading Animation */
-    .loading-container {
+    .loading-container { /* This class is now used only for the custom styling of the spinner container */
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -471,16 +480,18 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- Load Model ---
+# --- Load Model (VERSI LEBIH SEDERHANA DAN TERKINI) ---
 @st.cache_resource
 def load_ml_model():
     model_path = 'model_sampah_vgg16.keras' 
-    gdrive_file_id = "1lWx7TBcjxxFO3MOUWKEW7oUPVepWxgqN" 
+    gdrive_file_id = "1lWx7TBcjxxFO3MOUWKEW7oUPVepWxgqN" # Ganti dengan ID file Google Drive Anda yang benar
 
     try:
+        # Cek apakah model sudah ada secara lokal dan ukurannya masuk akal (> 100MB)
+        # Jika ukurannya terlalu kecil (misalnya, 2.4KB), anggap rusak dan hapus
         if os.path.exists(model_path) and os.path.getsize(model_path) < 100000000:
             st.warning(f"File '{model_path}' ditemukan tetapi ukurannya terlalu kecil ({os.path.getsize(model_path)} bytes). Mengunduh ulang...")
-            os.remove(model_path) 
+            os.remove(model_path) # Hapus file yang rusak
 
         # Jika file belum ada atau baru saja dihapus karena rusak, unduh
         if not os.path.exists(model_path):
@@ -534,7 +545,6 @@ category_colors = {
 # --- Function Prediction ---
 def predict_image(image_file, model, class_labels):
     try:
-        # Menggunakan Image.open dari PIL
         img = Image.open(image_file).convert("RGB") 
         img = img.resize((224, 224))
         img_array = np.array(img)
@@ -631,7 +641,7 @@ with st.container(): # Main container for overall app layout
     </div>
     """, unsafe_allow_html=True)
 
-    # --- Upload Section ---
+    # --- Upload Section <!-- PERUBAHAN DI SINI: Re-struktur untuk penempatan widget Streamlit yang lebih baik -->
     st.markdown("""
     <div class="glass-card">
         <div class="upload-section">
@@ -640,48 +650,62 @@ with st.container(): # Main container for overall app layout
     col1, col2 = st.columns(2)
 
     with col1:
-        with st.container(): 
+        with st.container(): # Ini adalah container untuk seluruh kartu upload file
             st.markdown("""
-            <div class="upload-card-content">
-                <span class="upload-icon">📁</span>
-                <h3 class="upload-title">Upload dari Galeri</h3>
-                <p class="upload-subtitle">Pilih gambar sampah dari perangkat Anda</p>
-            </div>
-            <!-- button-container tidak perlu dibuka atau ditutup dengan markdown di sini -->
+            <div class="upload-card">
+                <div class="upload-card-content">
+                    <span class="upload-icon">📁</span>
+                    <h3 class="upload-title">Upload dari Galeri</h3>
+                    <p class="upload-subtitle">Pilih gambar sampah dari perangkat Anda</p>
+                </div>
+                <div class="button-container">
             """, unsafe_allow_html=True)
             
+            # Widget Streamlit diletakkan di sini, setelah pembukaan div custom
             uploaded_file = st.file_uploader(
                 "Pilih gambar...",
                 type=["jpg", "jpeg", "png"],
                 key="file_uploader",
                 label_visibility="hidden"
             )
+            
+            st.markdown("""
+                </div> <!-- Tutup .button-container -->
+            </div> <!-- Tutup .upload-card -->
+            """, unsafe_allow_html=True)
 
     with col2:
-        with st.container(): 
+        with st.container(): # Ini adalah container untuk seluruh kartu ambil foto
             st.markdown("""
-            <div class="upload-card-content">
-                <span class="upload-icon">📸</span>
-                <h3 class="upload-title">Ambil Foto</h3>
-                <p class="upload-subtitle">Gunakan kamera untuk mengambil foto langsung</p>
-            </div>
-            <!-- button-container tidak perlu dibuka atau ditutup dengan markdown di sini -->
+            <div class="upload-card">
+                <div class="upload-card-content">
+                    <span class="upload-icon">📸</span>
+                    <h3 class="upload-title">Ambil Foto</h3>
+                    <p class="upload-subtitle">Gunakan kamera untuk mengambil foto langsung</p>
+                </div>
+                <div class="button-container">
             """, unsafe_allow_html=True)
             
             camera_col_placeholder = st.empty()
 
             if st.session_state.show_camera:
-                with camera_col_placeholder.container():
+                with camera_col_placeholder.container(): # Ini adalah container internal untuk camera_input
                     captured_camera_file = st.camera_input("Ambil foto sampah", key="camera_input", label_visibility="hidden")
                     if captured_camera_file is not None:
                         st.session_state.camera_file_buffer = captured_camera_file
                         st.session_state.show_camera = False
                         st.rerun()
             else:
+                # Widget Streamlit diletakkan di sini, setelah pembukaan div custom
                 if camera_col_placeholder.button("📷 Aktifkan Kamera", key="camera_btn", help="Klik untuk mengaktifkan kamera"):
                     st.session_state.show_camera = True
                     st.session_state.camera_file_buffer = None
                     st.rerun()
+            
+            st.markdown("""
+                </div> <!-- Tutup .button-container -->
+            </div> <!-- Tutup .upload-card -->
+            """, unsafe_allow_html=True)
 
     st.markdown("</div></div>", unsafe_allow_html=True) # Menutup .upload-section dan .glass-card
 
@@ -709,6 +733,7 @@ with st.container(): # Main container for overall app layout
 
             with results_col1:
                 with st.container(): 
+                    # <!-- PERUBAHAN DI SINI: Mengganti use_column_width menjadi use_container_width -->
                     st.image(image_source, use_container_width=True, caption='Gambar yang Diunggah/Diambil')
             
             with results_col2:
@@ -786,4 +811,4 @@ with st.container(): # Main container for overall app layout
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True) # Close main-container div
