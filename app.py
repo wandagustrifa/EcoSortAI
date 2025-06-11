@@ -488,7 +488,6 @@ def load_ml_model():
             os.remove(model_path)
 
         if not os.path.exists(model_path):
-            st.info(f"Mengunduh model dari Google Drive (ID: {gdrive_file_id}) ke '{model_path}'...")
             gdown.download(id=gdrive_file_id, output=model_path, quiet=False, fuzzy=True)
 
         # Muat model
